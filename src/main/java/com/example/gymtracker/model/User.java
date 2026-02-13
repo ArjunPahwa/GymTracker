@@ -1,8 +1,7 @@
 package com.example.gymtracker.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +15,9 @@ import java.util.List;
 @Getter
 @Setter
 @Table(name="user")
+@Builder
+@RequiredArgsConstructor
+@AllArgsConstructor
 public class User implements UserDetails {
 
     @Id
@@ -30,22 +32,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private role role;
 
-    private boolean enabled;
-    @Column(name="verification_code")
-    private String verificationCode;
-    @Column(name = "verification_expiration")
-    private LocalDateTime expiration;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     private List<Workout> workouts;
 
-    public User(){}
-    public User(String username,String email,String password,role role){
-        this.username=username;
-        this.email=email;
-        this.password=password;
-        this.role=role;
-    }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -69,6 +60,6 @@ public class User implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return enabled;
+        return true;
     }
 }
