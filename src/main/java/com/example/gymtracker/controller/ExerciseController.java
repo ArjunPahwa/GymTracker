@@ -22,7 +22,7 @@ public class ExerciseController {
         this.exerciseService = exerciseService;
     }
 
-    @PostMapping//("/{id}")
+    @PostMapping("/add")
     public ResponseEntity<String> createExercise(@RequestBody Exercise exercise){
 
         exerciseService.createExercise(exercise);

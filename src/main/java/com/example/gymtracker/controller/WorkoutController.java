@@ -1,17 +1,17 @@
 package com.example.gymtracker.controller;
-
-
+import com.example.gymtracker.model.User;
 import com.example.gymtracker.model.Workout;
-import com.example.gymtracker.model.WorkoutExercise;
 import com.example.gymtracker.service.WorkoutService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path="/users/{userid}/workouts")
+@RequestMapping(path="/users/workouts")
 public class WorkoutController {
 
     private final WorkoutService workoutService;
@@ -22,25 +22,39 @@ public class WorkoutController {
 
 
     @PostMapping
-    public ResponseEntity<String> createNewUserWorkout(@PathVariable Long userid,
-                                                       @RequestBody Workout workout){
+    public ResponseEntity<String> createNewUserWorkout(@RequestBody Workout workout,
+                                                       Authentication authentication){
 
-        workoutService.createNewUserWorkout(userid,workout);
+
+        User user = (User) authentication.getPrincipal();
+
+        final String username= user.getUsername();
+
+        workoutService.createNewUserWorkout(username,workout);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body("User with id: "+userid+" created new workout");
+                .body("User with username: "+username+" created new workout");
     }
 
 
 
     @GetMapping("/all")
-    public List<Workout> getAllUserWorkouts(@PathVariable Long userid){
+    public List<Workout> getAllUserWorkouts(Authentication authentication){
+
+        User user = (User) authentication.getPrincipal();
+
+        final Long userid = user.getId();
+
         return workoutService.getAllUserWorkouts(userid);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUserWorkout(@PathVariable Long userid,
-                                                    @PathVariable Long id){
+    public ResponseEntity<String> deleteUserWorkout(@PathVariable Long id,
+                                                    Authentication authentication){
+        User user = (User) authentication.getPrincipal();
+
+        final Long userid = user.getId();
+
         workoutService.deleteWorkoutById(userid,id);
 
         return ResponseEntity.status(HttpStatus.ACCEPTED)

@@ -3,7 +3,6 @@ package com.example.gymtracker.service;
 
 import com.example.gymtracker.model.User;
 import com.example.gymtracker.model.Workout;
-import com.example.gymtracker.model.WorkoutExercise;
 import com.example.gymtracker.repository.UserRepository;
 import com.example.gymtracker.repository.WorkoutRepository;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,8 @@ public class WorkoutService {
         this.userRepository = userRepository;
     }
 
-    public void createNewUserWorkout(Long userid, Workout workout) {
-        User user=userRepository.findById(userid)
+    public void createNewUserWorkout(String username, Workout workout) {
+        User user=userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         workout.setUser(user);
 
@@ -31,8 +30,7 @@ public class WorkoutService {
     }
 
     public List<Workout> getAllUserWorkouts(Long userid) {
-        User user=userRepository.findById(userid)
-                .orElseThrow(()->new RuntimeException("User not found"));
+
         return workoutRepository.findByUserId(userid);
     }
 
