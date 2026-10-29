@@ -22,6 +22,7 @@ public class WorkoutController {
 
 
     @PostMapping
+    @RequestMapping("/new")
     public ResponseEntity<String> createNewUserWorkout(@RequestBody Workout workout,
                                                        Authentication authentication){
 
